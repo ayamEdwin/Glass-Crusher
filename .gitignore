@@ -1,0 +1,40 @@
+# SEGGER Embedded Studio generated files
+*.obj
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.out
+*.map
+*.lst
+*.log
+
+# Build output directories
+/output/*
+/Output/*
+/build/*
+/Build/*
+/Debug/*
+/Release/*
+/.cproject
+
+# User-specific settings
+*.user
+*.bak
+*.tmp
+*.swp
+*.swo
+*.dep
+
+# SEGGER project backup files
+*.emProject.bak
+*.emSolution.bak
+
+# Other temporary files
+*.DS_Store
+Thumbs.db
+
+# Ignore system-specific hidden files
+ehthumbs.db
+desktop.ini

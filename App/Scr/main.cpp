@@ -35,60 +35,45 @@ Adhere to it!
 *   Application entry point.
 */
 
-int main(void) {
-  SystemClock_Config();
-  while(1){
-      
-  }
+PwmOut T1_pwm("PA4");
+PwmOut T2_pwm("PA6");
+DigitalOut T1_EN(PA0);
+DigitalOut T2_EN(PA1);
+DigitalOut ON_BOARD_LED(PD2);
+
+
+void normal_drive(float duty_cycle){
+        
+               T1_pwm.write(duty_cycle);
+               T2_EN.write(0);
+               T2_pwm.write(0.0f);
+               T1_EN.write(1);
+}
+
+void reverse_drive(float duty_cycle){
+              // reverse
+              T1_pwm.write(0.0f);
+              T2_EN.write(1);
+              T2_pwm.write(duty_cycle);
+              T1_EN.write(0);
 }
 
 
-///*
-//int main(void) {
-//      /* system core clock configuration */
-//      SystemClock_Config();
-//      //SystemCoreClockUpdate();
-//      printf("Generating Pwm signal...\n");
-//      //PwmOut pwm("PA4");
-//      DigitalOut led(PA0);
-//      DigitalOut no_write_state(PA1);
-//      DigitalIn  button(PB11);
-//      DigitalOut ON_BOARD_LED(PD2);
+int main(void) {
+      /* system core clock configuration */
+      SystemClock_Config();
+      ON_BOARD_LED.write(1);
+      T1_pwm.setPeriod(0.001f);
+      T2_pwm.setPeriod(0.001f);
 
-//      // pwm settings
-//     // pwm.setFrequency(1000);
-//      float duty = 0.0f;
-//      float step = 0.05f;
+     while(1){
+              normal_drive(1.0f);
+              ThisThread::sleep_for(5000);
+              reverse_drive(0.5f);
+              ThisThread::sleep_for(5000);
+        }
 
-//      // DigitalOut test 1 (pin state = 1)
-//      led.write(1);
-//      printf("Led Value: %i", led.read());
+}
 
-//      // DigitalOut test (pin state = 0)
-//      printf("No value written to pin: %i", no_write_state.read());
-
-//      // internal pullup
-//      button.mode(PullUp);
-
-//     while(1){
-//              // Digital Test
-//               if (button.read() == 1) {
-//                    ON_BOARD_LED.write(1);
-                    
-//               }
-//               else {ON_BOARD_LED.write(0);}
-
-//               /*// pwm test
-//               pwm.write(duty);
-//               // wait test
-//               ThisThread::sleep_for(100);
-
-//               duty += step;
-//               if (duty >= 1.0f || duty <= 0.0f) {
-//               step = -step; // reverse direction
-//                }*/
-//        }
-
-//}
 
 /*************************** End of file ****************************/
