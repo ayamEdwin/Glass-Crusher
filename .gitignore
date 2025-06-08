@@ -1,4 +1,4 @@
-# SEGGER Embedded Studio generated files
+OA# SEGGER Embedded Studio generated files
 *.obj
 *.o
 *.d
@@ -18,6 +18,13 @@
 /Debug/*
 /Release/*
 /.cproject
+Glass Crusher_Debug.jlink
+SEGGER_THUMB_Startup.s
+Glass Crusher.emProject
+STM32F030RCTx_MemoryMap.xml
+STM32F0xx_Flash.icf
+Glass Crusher.emSession
+STM32F0x0_Registers.xml
 
 # User-specific settings
 *.user
@@ -26,6 +33,7 @@
 *.swp
 *.swo
 *.dep
+
 
 # SEGGER project backup files
 *.emProject.bak
