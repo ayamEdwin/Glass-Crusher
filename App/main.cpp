@@ -20,7 +20,7 @@ Adhere to it!
 
 
 /* all included headers and APIs from core*/
-#include "mbed.h"
+//#include "mbed.h"
 
 
 /*********************************************************************
@@ -30,36 +30,37 @@ Adhere to it!
 *  Function description
 *   Application entry point.
 */
-DigitalOut ON_BOARD_LED(PTD2);
 
-    
-PwmOut T1_pwm(PTB0); // transistor 1 pwm
-PwmOut T2_pwm(PTB1); // transistor 2 pwm 
-DigitalOut T1_EN(PTA0); // transistor 1 enable
-DigitalOut T2_EN(PTA1); // transistor 2 enable
+#include "mbed.h" // includes all libraries
 
-void driveForward(float duty_cycle){
-          T1_pwm.write(duty_cycle);
-          T2_pwm.write(0.0);
-          T2_EN.write(0);
-          T1_EN.write(1);
-  }
 
-void soft_start(float targetSpeed, unsigned long rampTime){
-                           for (float dc=INIT_SPEED; dc<=FULL_SPEED; dc+=STEP_VAL){
-                                  driveForward(dc);
-                                  wait_ms(rampTime);
-                                  if (dc == targetSpeed) break;
-                  }
-                 
+DigitalOut ON_BOARD_LED(LED);
+InterruptIn startButton(SOFT_START_BTN);
+Motor crushingMotor(PWM_1, PWM_2, EN_1, EN_2, 1.0); //pwm1, pwm2, en1, en2
+
+// interrupt flags
+volatile uint8_t startBtn_pressed_flag = BUTTON_NOT_PRESSED_FLAG;
+
+void detect_startBtn_interrupt(){
+      //  updates flag to indicate interrupt
+      startBtn_pressed_flag = BUTTON_PRESSED_FLAG;
 }
+
 
 
 int main(void) {
       ON_BOARD_LED.write(1);
-
+      startButton.mode(PullUp);
+      startButton.rise(&detect_startBtn_interrupt);
+      
       while(1){
-              soft_start(1.0, 500);
+              if (startBtn_pressed_flag){
+                    // resets the flag immediately after detecting it
+                    startBtn_pressed_flag = BUTTON_NOT_PRESSED_FLAG;
+
+                    // soft starts motor
+                    crushingMotor.soft_start(1);
+              }
         }
 
 }

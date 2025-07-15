@@ -1,0 +1,182 @@
+/*********************************************************************
+*                          MBED API PROJECT                          *
+*                                                                    *
+**********************************************************************
+
+-------------------------- END-OF-HEADER -----------------------------
+
+Drivers : Low Level Drivers, CMSIS_5, STM32F0XX
+Language  : C/C++
+Tools    : Embedded studio
+Target Device : STM32F030RCT6
+Collaborators    : Mr. Richard Mensah, Edwin Setsoafia, Enos Essandoh,
+                    Amidu Lukman, Lawson Chinedu, Paul
+              
+Comment Style: @brief describes in brief the funtionality
+               @param description of parameters
+               @important needs to be critically examined
+               // For comments that are not lengthy
+
+NB: This is a standard for code clarity and better documentation
+Adhere to it!
+
+*/
+
+
+
+#ifndef MAIN_H
+#define MAIN_H
+
+// Preprocessor Definitions
+// Error Codes (odd hundreds)
+#define I2C_PIN_ERROR 101 // can't be used for i2c
+
+//Success Codes (even hundreds)
+#define I2C_PIN_EXISTS 100 // can be used for i2c
+
+
+#include "stm32f030xc.h"
+
+
+// @brief all c included libraries go here 
+#ifdef __cplusplus
+extern "C" {
+  #endif
+  // usages in main.cpp 
+  #include "System Configuration.h"
+  #include "stdio.h" // for printf
+  #include <cstring>
+  #include <stdint.h>
+  
+
+  // c libraries for use in APIs 
+  #include "stm32f0xx_ll_crs.h"
+  #include "stm32f0xx_ll_rcc.h"
+  #include "stm32f0xx_ll_bus.h"
+  #include "stm32f0xx_ll_system.h"
+  #include "stm32f0xx_ll_exti.h"
+  #include "stm32f0xx_ll_cortex.h"
+  #include "stm32f0xx_ll_utils.h"
+  #include "stm32f0xx_ll_pwr.h"
+  #include "stm32f0xx_ll_dma.h"
+  #include "stm32f0xx_ll_tim.h"
+  #include "stm32f0xx_ll_gpio.h"
+  
+
+  #ifdef __cplusplus
+}
+#endif
+
+
+// SYSCFG->EXTICR register indeces
+#define INDEX_0 0 // SYSCFG_EXTICR1
+#define INDEX_1 1 // SYSCFG_EXTICR2
+#define INDEX_2 2 // SYSCFG_EXTICR3
+#define INDEX_3 3 // SYSCFG_EXTICR4
+
+//prototypes
+void wait(float);
+void wait_ms(uint16_t);
+void wait_us(uint32_t);
+void portClkEn(uint8_t);
+void timerClkEn(uint8_t);
+void EXTIClkEn(void);
+void EXTIRouter(uint8_t port, uint8_t pin_num);
+void EXTIHandler(void);
+
+
+//Array of GPIO pointers
+extern GPIO_TypeDef* GpioArray[];
+//Array of SPI pointers
+extern SPI_TypeDef* SpiArray[];
+//Array of SPI pointers
+extern TIM_TypeDef* TimArray[];
+//Array of EXTI pointers
+//extern EXTI_TypeDef* EXTIArray[];
+
+
+
+typedef enum{
+  // PORT A
+  PTA0, PTA1, PTA2, PTA3, PTA4, PTA5, PTA6, PTA7, PTA8,
+  PTA9, PTA10, PTA11, PTA12, PTA13, PTA14, PTA15,
+
+  // PORT B
+  PTB0, PTB1, PTB2, PTB3, PTB4, PTB5, PTB6, PTB7, PTB8,
+  PTB9, PTB10, PTB11, PTB12, PTB13, PTB14, PTB15,
+
+  // PORT C
+  PTC0, PTC1, PTC2, PTC3, PTC4, PTC5, PTC6, PTC7, PTC8,
+  PTC9, PTC10, PTC11, PTC12, PTC13, PTC14, PTC15,
+
+  // PORT D
+  PTD2 = 50,
+
+  // PORT E is Null
+
+  //PORT F
+  PTF6 = 86,
+  PTF7 = 87
+
+} pin_name;
+
+// interrupt flag default values
+#define BUTTON_PRESSED_FLAG 1
+#define BUTTON_NOT_PRESSED_FLAG 0
+
+
+//the onboard led
+#define  LED   PTD2
+#define  PWM_1 PTB0
+#define  PWM_2 PTB1
+#define  EN_1  PTB3
+#define  EN_2  PTB2
+#define  SOFT_START_BTN PTA0
+#define  SOFT_STOP_BTN PTA1
+#define  IMPULSE_BTN PTA2
+#define  GPIOPORT   GpioArray[portNum]
+#define  TIMER      TimArray[tim]
+#define  SPIPORT      SpiArray[portNum]
+#define  EXTI_LINE       EXTIArray[portNum]
+
+typedef enum 
+{
+        tim1,tim3,tim6,tim7,
+        tim14,tim15,tim16,tim17
+} Timers;
+
+typedef enum { 
+        //channels for various timers
+        channel1,channel2,channel3,channel4
+}Channels;
+
+
+typedef enum{
+        PORTA,PORTB,PORTC,PORTD,PORTF
+}PortName;
+
+// @brief defines speed mode of gpio pins
+ enum GPIOSpeed {
+      SPEED_LOW = 0b00,
+      SPEED_MEDIUM = 0b01,  
+      SPEED_HIGH = 0b11   
+};
+
+
+
+// mode for input pins
+typedef enum{
+        PullNone, // No pull-up or pull-down (external resistor)
+        PullUp, // pull-up
+        PullDown, // pull-down
+        //OpenDrain;
+} InputConfig;
+
+typedef enum 
+{
+  PushPull,OpenDrain
+}OutputConfig;
+
+
+
+#endif // MAIN_H
